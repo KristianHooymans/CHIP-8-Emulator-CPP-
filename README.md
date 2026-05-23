@@ -1,2 +1,2 @@
-# CHIP-8-Emulator-C-
-Implementation of a CHIP-8 Emulator in C++
+# CHIP-8-Emulator-C++-
+Emulating CHIP-8 in C++
