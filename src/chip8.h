@@ -5,6 +5,11 @@
 #include <chrono>
 #include <random>
 
+
+constexpr unsigned int VIDEO_WIDTH = 64;
+constexpr unsigned int VIDEO_HEIGHT = 32;
+
+
 class Chip8
 {
     Chip8()
@@ -59,8 +64,7 @@ class Chip8
 			tableF[i] = &Chip8::OP_NULL;
 		}
 
-		tableF[0x07] = &Chip8::OP_Fx07;
-		tableF[0x0A] = &Chip8::OP_Fx0A;
+		tableF[0x07] = &Chip8::OP_Fx07; tableF[0x0A] = &Chip8::OP_Fx0A;
 		tableF[0x15] = &Chip8::OP_Fx15;
 		tableF[0x18] = &Chip8::OP_Fx18;
 		tableF[0x1E] = &Chip8::OP_Fx1E; 
@@ -103,8 +107,11 @@ class Chip8
         
 
     public:
+      Chip8();
+      void LoadROM(char const* filename);
+      void Cycle();
       uint8_t keys[16]{};
-      uint32_t screen[64 * 32]{};
+      uint32_t [64 * 32]{};
     private: 
       uint8_t registers[16]{};
       uint8_t memory[4096]{};
