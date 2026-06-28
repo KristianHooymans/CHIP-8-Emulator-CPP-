@@ -1,5 +1,6 @@
 #include "chip8.h"
 
+#include <SDL.h>
 #include <iostream>
 #include <vector>
 #include <cstdint>
