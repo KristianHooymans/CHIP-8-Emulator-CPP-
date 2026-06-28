@@ -31,6 +31,34 @@ class Platform {
             SDL_RenderCopy(renderer, texture, nullptr, nullptr);
             SDL_Render
         }
+        bool ProcessInput(uint8_t keys) {
+            bool quit = false;
+
+            SDL_Event event;
+
+            while(SDL_PollEvent(&event)){
+                switch (event.type) {
+                    case SDL_QUIT:
+                        {
+                            quit = true;
+                        } break;
+
+                    case SDL_KEYDOWN:
+                        {
+                            switch (event.key.keysym.sym) {
+                                case SDLK_ESCAPE:
+                                    {
+                                        quit = true;
+                                    } break;
+                                case SDLK_x:
+                                    {
+                                        keys[0] = 1;
+                                    } break;
+                            }
+                        }
+                }
+            }
+        }
 }
 
 class Chip8
