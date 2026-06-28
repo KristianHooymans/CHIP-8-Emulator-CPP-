@@ -13,67 +13,6 @@ constexpr unsigned int VIDEO_HEIGHT = 32;
 
 class Chip8
 {
-    Chip8()
-        : randGen(std::chrono::system_clock::now().time_since_epoch().count()) 
-    {
-        
-        randByte = std::uniform_int_distribution<uint8_t>(0, 255U);
-
-
-        table[0x0] = &Chip8::Table0;
-        table[0x1] = &Chip8::OP_1nnn;
-		table[0x2] = &Chip8::OP_2nnn;
-		table[0x3] = &Chip8::OP_3xkk;
-		table[0x4] = &Chip8::OP_4xkk;
-		table[0x5] = &Chip8::OP_5xy0;
-		table[0x6] = &Chip8::OP_6xkk;
-		table[0x7] = &Chip8::OP_7xkk;
-		table[0x8] = &Chip8::Table8;
-		table[0x9] = &Chip8::OP_9xy0;
-		table[0xA] = &Chip8::OP_Annn;
-		table[0xB] = &Chip8::OP_Bnnn;
-		table[0xC] = &Chip8::OP_Cxkk;
-		table[0xD] = &Chip8::OP_Dxyn;
-		table[0xE] = &Chip8::TableE;
-		table[0xF] = &Chip8::TableF;
-
-		for (size_t i = 0; i <= 0xE; i++)
-		{
-			table0[i] = &Chip8::OP_NULL;
-			table8[i] = &Chip8::OP_NULL;
-			tableE[i] = &Chip8::OP_NULL;
-		}
-
-		table0[0x0] = &Chip8::OP_00E0;
-		table0[0xE] = &Chip8::OP_00EE;
-
-		table8[0x0] = &Chip8::OP_8xy0;
-		table8[0x1] = &Chip8::OP_8xy1;
-		table8[0x2] = &Chip8::OP_8xy2;
-		table8[0x3] = &Chip8::OP_8xy3;
-		table8[0x4] = &Chip8::OP_8xy4;
-		table8[0x5] = &Chip8::OP_8xy5;
-		table8[0x6] = &Chip8::OP_8xy6;
-		table8[0x7] = &Chip8::OP_8xy7;
-		table8[0xE] = &Chip8::OP_8xyE;
-
-		tableE[0x1] = &Chip8::OP_ExA1;
-		tableE[0xE] = &Chip8::OP_Ex9E;
-
-		for (size_t i = 0; i <= 0x65; i++)
-		{
-			tableF[i] = &Chip8::OP_NULL;
-		}
-
-		tableF[0x07] = &Chip8::OP_Fx07; tableF[0x0A] = &Chip8::OP_Fx0A;
-		tableF[0x15] = &Chip8::OP_Fx15;
-		tableF[0x18] = &Chip8::OP_Fx18;
-		tableF[0x1E] = &Chip8::OP_Fx1E; 
-		tableF[0x29] = &Chip8::OP_Fx29;
-		tableF[0x33] = &Chip8::OP_Fx33;
-		tableF[0x55] = &Chip8::OP_Fx55;
-		tableF[0x65] = &Chip8::OP_Fx65;
-	}
     void Table0()
 	{
 		((*this).*(table0[opcode & 0x000Fu]))();
@@ -111,7 +50,7 @@ class Chip8
       Chip8();
       void LoadROM(char const* filename);
       void Cycle();
-      uint8_t keys[16]{};
+      uint8_t keypad[16]{};
       uint32_t video[64 * 32]{};
     private: 
       uint8_t registers[16]{};
@@ -120,8 +59,8 @@ class Chip8
       uint16_t pc{};
       uint16_t stack[16]{};
       uint8_t sp{};
-      uint8_t delay_timer{};
-      uint8_t sound_timer{};
+      uint8_t delayTimer{};
+      uint8_t soundTimer{};
       uint16_t opcode;
 
       void OP_00E0();
@@ -160,18 +99,18 @@ class Chip8
       void OP_Fx65();
 
       std::default_random_engine randGen;
-      std::uniform_int_distribution<uint8_t> randByte;
+      std::uniform_int_distribution<uint16_t> randByte;
 
 };
 
 
 class Platform {
     public: 
-        Platform(char const* title, int windowWidth, int windowHeight, int textureWidth, int texture Height) {
+        Platform(char const* title, int windowWidth, int windowHeight, int textureWidth, int textureHeight) {
             SDL_Init(SDL_INIT_VIDEO);
             window = SDL_CreateWindow(title, 0, 0, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
             renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-            texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMNING, textureWidth, textureHeight);
+            texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, textureWidth, textureHeight);
         }
         ~Platform() {
             SDL_DestroyTexture(texture);
@@ -184,9 +123,9 @@ class Platform {
             SDL_UpdateTexture(texture, nullptr, buffer, pitch);
             SDL_RenderClear(renderer);
             SDL_RenderCopy(renderer, texture, nullptr, nullptr);
-            SDL_Render;
+            SDL_RenderPresent(renderer);
         }
-        bool ProcessInput(uint8_t keys) {
+        bool ProcessInput(uint8_t* keys) {
             bool quit = false;
 
             SDL_Event event;
@@ -256,7 +195,7 @@ class Platform {
                                 case SDLK_4:
                                 {
                                     keys[0xC] = 1;
-                                }
+                                } break;
                                 case SDLK_r:
                                 {
                                     keys[0xD] = 1;

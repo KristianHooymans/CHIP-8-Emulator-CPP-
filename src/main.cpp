@@ -2,10 +2,12 @@
 
 #include <iostream>
 #include <chrono>
+#include <string>
+#include <cstdlib>
 
 
 
-int main(int argc, char__ argv) {
+int main(int argc, char** argv) {
     if (argc != 4) {
         std::cerr << "Usage: " << argv[0] << " <Scale> <Delay> <ROM>\n";
         std::exit(EXIT_FAILURE);
@@ -15,7 +17,7 @@ int main(int argc, char__ argv) {
     int cycleDelay = std::stoi(argv[2]);
     char const* romFilename = argv[3];
 
-    Platform platform("CHIP-8 Emulator", VIDWO_WIDTH * videoScale, VIDEO_HEIGHT * videoScale, VIDEO_WIDTH, VIDEO_HEIGHT);
+    Platform platform("CHIP-8 Emulator", VIDEO_WIDTH * videoScale, VIDEO_HEIGHT * videoScale, VIDEO_WIDTH, VIDEO_HEIGHT);
 
     Chip8 chip8;
     chip8.LoadROM(romFilename);
@@ -32,7 +34,7 @@ int main(int argc, char__ argv) {
         float dt = std::chrono::duration<float, std::chrono::milliseconds::period>(currentTime - lastCycleTime).count();
 
         if (dt > cycleDelay) {
-            lasyCycleTime = currentTime;
+            lastCycleTime = currentTime;
             chip8.Cycle();
             platform.Update(chip8.video, videoPitch);
         }
