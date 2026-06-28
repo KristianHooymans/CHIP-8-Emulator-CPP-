@@ -4,6 +4,7 @@
 # Compiled Object files
 *.slo
 *.lo
+chip8
 *.o
 *.obj
 
