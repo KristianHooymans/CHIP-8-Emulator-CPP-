@@ -57,6 +57,25 @@ void Chip8::LoadROM(char const* filename) {
         delete[] buffer;
     }
 }
+
+void Chip8::Cycle() {
+    opcode = (memory[pc] << 8u | memory[pc + 1]);
+
+    pc += 2;
+    
+    //decode then execute opcode
+    ((*this).(table[(opcode & 0xF000u) >> 12u]))();
+
+    if (delayTimer > 0) {
+        --delayTimer;
+    }
+
+    if(soundTimer > 0) {
+        --soundTimer;
+    }
+}
+
+
 //clear display
 void Chip8::OP_00E0(){
     std::memset(video, 0, sizeof(video));

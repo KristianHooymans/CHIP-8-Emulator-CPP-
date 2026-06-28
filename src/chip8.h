@@ -10,6 +10,29 @@ constexpr unsigned int VIDEO_WIDTH = 64;
 constexpr unsigned int VIDEO_HEIGHT = 32;
 
 
+class Platform {
+    public: 
+        Platform(char const* title, int windowWidth, int windowHeight, int textureWidth, int texture Height) {
+            SDL_Init(SDL_INIT_VIDEO);
+            window = SDL_CreateWindow(title, 0, 0, windowWidth, windowHeight, SDL_WINDOW_SHOWN);
+            renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+            texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMNING, textureWidth, textureHeight);
+        }
+        ~Platform() {
+            SDL_DestroyTexture(texture);
+            SDL_DestroyRenderer(renderer);
+            SDL_DestroyWindow(window);
+            SDL_Quit();
+        }
+
+        void Update(void const* buffer, int pitch) {
+            SDL_UpdateTexture(texture, nullptr, buffer, pitch);
+            SDL_RenderClear(renderer);
+            SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+            SDL_Render
+        }
+}
+
 class Chip8
 {
     Chip8()
