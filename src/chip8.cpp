@@ -331,11 +331,9 @@ void Chip8::OP_Dxyn() {
     registers[0xF] = 0;
 
     for (unsigned int row = 0; row < height; ++row) {
-        if (yPos + row >= VIDEO_HEIGHT) break;
         uint8_t spriteByte = memory[index + row];
 
         for (unsigned int col = 0; col < 8; ++col) {
-            if (xPos + col >= VIDEO_WIDTH) break;
             uint8_t spritePixel = spriteByte & (0x80u >> col);
             uint32_t* screenPixel = &video[(yPos + row) * VIDEO_WIDTH + (xPos + col)];
 
