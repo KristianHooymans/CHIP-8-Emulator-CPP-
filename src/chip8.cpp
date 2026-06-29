@@ -34,7 +34,7 @@ Chip8::Chip8()
 {
   pc = START_ADD;
 
-  for (int i = 0; i < FONTSET_SIZE; ++i) {
+  for (unsigned int i = 0; i < FONTSET_SIZE; ++i) {
     memory[FONTSET_START + i] = fontset[i];
   }
   randByte = std::uniform_int_distribution<uint16_t>(0, 255U);
