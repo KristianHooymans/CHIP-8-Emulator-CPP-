@@ -57,12 +57,6 @@ clang++ -std=c++20 -Wall *.cpp -o chip8 $(sdl2-config --cflags --libs)
 | `delay`  | Milliseconds between emulation cycles. Lower is faster — different games feel best at different speeds. |
 | `rom`    | Path to the CHIP-8 ROM file to load. |
 
-Example:
-
-```bash
-./chip8 10 3 roms/tetris.ch8
-```
-
 To run the included opcode test:
 
 ```bash
